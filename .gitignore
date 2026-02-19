@@ -1,0 +1,45 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+dist/
+build/
+*.egg
+
+# Virtual Environments
+venv/
+env/
+.env/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Data (large files)
+data/raw/*.csv
+data/processed/*.csv
+!data/raw/.gitkeep
+!data/processed/.gitkeep
+
+# Model artifacts
+models/**/*.joblib
+models/**/*.pkl
+
+# Results
+results/predictions/*.json
+results/reports/*.json
+!results/predictions/.gitkeep
+!results/reports/.gitkeep
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Logs
+*.log

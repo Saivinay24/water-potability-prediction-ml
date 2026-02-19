@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgriSense AI — Agricultural Intelligence Dashboard</title>
+    <meta name="description" content="AI-powered precision agriculture dashboard for soil health, water management, crop intelligence, and irrigation optimization.">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <!-- Sidebar Navigation -->
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">
+                <span class="logo-icon">🌿</span>
+                <div class="logo-text">
+                    <h1>AgriSense</h1>
+                    <span class="logo-subtitle">AI Intelligence</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="nav-section">
+            <span class="nav-label">MONITORING</span>
+            <a href="#" class="nav-item active" data-tab="overview">
+                <span class="nav-icon">📊</span>
+                <span>Overview</span>
+            </a>
+            <a href="#" class="nav-item" data-tab="soil">
+                <span class="nav-icon">🌱</span>
+                <span>Soil Health</span>
+            </a>
+            <a href="#" class="nav-item" data-tab="water">
+                <span class="nav-icon">💧</span>
+                <span>Water Quality</span>
+            </a>
+        </div>
+        
+        <div class="nav-section">
+            <span class="nav-label">INTELLIGENCE</span>
+            <a href="#" class="nav-item" data-tab="irrigation">
+                <span class="nav-icon">💦</span>
+                <span>Irrigation</span>
+            </a>
+            <a href="#" class="nav-item" data-tab="crops">
+                <span class="nav-icon">🌾</span>
+                <span>Crop Advisor</span>
+            </a>
+            <a href="#" class="nav-item" data-tab="alerts">
+                <span class="nav-icon">🔔</span>
+                <span>Alerts</span>
+                <span class="alert-badge" id="alert-count">3</span>
+            </a>
+        </div>
+        
+        <div class="sidebar-footer">
+            <div class="sensor-status">
+                <span class="status-dot online"></span>
+                <span>8 Sensors Online</span>
+            </div>
+            <div class="last-update" id="last-update">
+                Updated just now
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Top Bar -->
+        <header class="topbar">
+            <div class="topbar-left">
+                <button class="menu-toggle" id="menu-toggle">☰</button>
+                <div class="breadcrumb">
+                    <span id="current-page">Overview</span>
+                </div>
+            </div>
+            <div class="topbar-right">
+                <div class="weather-widget">
+                    <span class="weather-icon">☀️</span>
+                    <span class="weather-temp" id="weather-temp">28°C</span>
+                    <span class="weather-desc">Clear</span>
+                </div>
+                <div class="date-display" id="date-display"></div>
+            </div>
+        </header>
+
+        <!-- Tab Content Area -->
+        <div class="content-area">
+            
+            <!-- ═══ OVERVIEW TAB ═══ -->
+            <div class="tab-content active" id="tab-overview">
+                <div class="page-header">
+                    <h2>Farm Intelligence Overview</h2>
+                    <p class="page-desc">Real-time insights from 8 sensor zones across your farmland</p>
+                </div>
+
+                <!-- KPI Cards -->
+                <div class="kpi-grid">
+                    <div class="kpi-card kpi-green">
+                        <div class="kpi-header">
+                            <span class="kpi-icon">🌱</span>
+                            <span class="kpi-trend up">↑ 5%</span>
+                        </div>
+                        <div class="kpi-value" id="kpi-soil-score">72.4</div>
+                        <div class="kpi-label">Avg Soil Health Score</div>
+                        <div class="kpi-bar"><div class="kpi-bar-fill" style="width: 72%"></div></div>
+                    </div>
+                    <div class="kpi-card kpi-blue">
+                        <div class="kpi-header">
+                            <span class="kpi-icon">💧</span>
+                            <span class="kpi-trend up">↑ 2%</span>
+                        </div>
+                        <div class="kpi-value" id="kpi-water-grade">B+</div>
+                        <div class="kpi-label">Avg Water Quality</div>
+                        <div class="kpi-bar"><div class="kpi-bar-fill" style="width: 78%"></div></div>
+                    </div>
+                    <div class="kpi-card kpi-amber">
+                        <div class="kpi-header">
+                            <span class="kpi-icon">💦</span>
+                            <span class="kpi-trend down">↓ 12%</span>
+                        </div>
+                        <div class="kpi-value" id="kpi-water-saved">34%</div>
+                        <div class="kpi-label">Water Savings vs Naive</div>
+                        <div class="kpi-bar"><div class="kpi-bar-fill" style="width: 34%"></div></div>
+                    </div>
+                    <div class="kpi-card kpi-purple">
+                        <div class="kpi-header">
+                            <span class="kpi-icon">📈</span>
+                            <span class="kpi-trend up">↑ 8%</span>
+                        </div>
+                        <div class="kpi-value" id="kpi-yield-eff">86%</div>
+                        <div class="kpi-label">Yield Efficiency</div>
+                        <div class="kpi-bar"><div class="kpi-bar-fill" style="width: 86%"></div></div>
+                    </div>
+                </div>
+
+                <!-- Charts Row -->
+                <div class="charts-row">
+                    <div class="chart-card wide">
+                        <div class="chart-header">
+                            <h3>Zone Health Comparison</h3>
+                            <span class="chart-badge">Live</span>
+                        </div>
+                        <div class="chart-body">
+                            <canvas id="chart-zone-health"></canvas>
+                        </div>
+                    </div>
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <h3>Deficiency Distribution</h3>
+                        </div>
+                        <div class="chart-body">
+                            <canvas id="chart-deficiency-dist"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Alert Preview -->
+                <div class="alert-preview">
+                    <div class="alert-preview-header">
+                        <h3>🔔 Recent Alerts</h3>
+                        <a href="#" class="view-all" data-tab="alerts">View All →</a>
+                    </div>
+                    <div class="alert-list" id="overview-alerts">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- ═══ SOIL HEALTH TAB ═══ -->
+            <div class="tab-content" id="tab-soil">
+                <div class="page-header">
+                    <h2>Soil Health Analysis</h2>
+                    <p class="page-desc">NPK levels, pH, organic matter, and zone-by-zone health scores</p>
+                </div>
+
+                <div class="soil-gauges">
+                    <div class="gauge-card">
+                        <div class="gauge-circle" id="gauge-n">
+                            <svg viewBox="0 0 120 120">
+                                <circle class="gauge-bg" cx="60" cy="60" r="52"></circle>
+                                <circle class="gauge-fill gauge-n-fill" cx="60" cy="60" r="52" 
+                                    stroke-dasharray="326.73" stroke-dashoffset="85"></circle>
+                            </svg>
+                            <div class="gauge-value">74</div>
+                        </div>
+                        <div class="gauge-label">Nitrogen<br><small>mg/kg</small></div>
+                    </div>
+                    <div class="gauge-card">
+                        <div class="gauge-circle" id="gauge-p">
+                            <svg viewBox="0 0 120 120">
+                                <circle class="gauge-bg" cx="60" cy="60" r="52"></circle>
+                                <circle class="gauge-fill gauge-p-fill" cx="60" cy="60" r="52"
+                                    stroke-dasharray="326.73" stroke-dashoffset="165"></circle>
+                            </svg>
+                            <div class="gauge-value">42</div>
+                        </div>
+                        <div class="gauge-label">Phosphorus<br><small>mg/kg</small></div>
+                    </div>
+                    <div class="gauge-card">
+                        <div class="gauge-circle" id="gauge-k">
+                            <svg viewBox="0 0 120 120">
+                                <circle class="gauge-bg" cx="60" cy="60" r="52"></circle>
+                                <circle class="gauge-fill gauge-k-fill" cx="60" cy="60" r="52"
+                                    stroke-dasharray="326.73" stroke-dashoffset="120"></circle>
+                            </svg>
+                            <div class="gauge-value">56</div>
+                        </div>
+                        <div class="gauge-label">Potassium<br><small>mg/kg</small></div>
+                    </div>
+                    <div class="gauge-card">
+                        <div class="gauge-circle" id="gauge-ph">
+                            <svg viewBox="0 0 120 120">
+                                <circle class="gauge-bg" cx="60" cy="60" r="52"></circle>
+                                <circle class="gauge-fill gauge-ph-fill" cx="60" cy="60" r="52"
+                                    stroke-dasharray="326.73" stroke-dashoffset="80"></circle>
+                            </svg>
+                            <div class="gauge-value">6.5</div>
+                        </div>
+                        <div class="gauge-label">pH Level<br><small>optimal: 6-7.5</small></div>
+                    </div>
+                    <div class="gauge-card">
+                        <div class="gauge-circle" id="gauge-om">
+                            <svg viewBox="0 0 120 120">
+                                <circle class="gauge-bg" cx="60" cy="60" r="52"></circle>
+                                <circle class="gauge-fill gauge-om-fill" cx="60" cy="60" r="52"
+                                    stroke-dasharray="326.73" stroke-dashoffset="190"></circle>
+                            </svg>
+                            <div class="gauge-value">3.8%</div>
+                        </div>
+                        <div class="gauge-label">Organic Matter<br><small>ideal: 3-6%</small></div>
+                    </div>
+                </div>
+
+                <div class="charts-row">
+                    <div class="chart-card wide">
+                        <div class="chart-header">
+                            <h3>Zone NPK Levels</h3>
+                        </div>
+                        <div class="chart-body">
+                            <canvas id="chart-npk-zones"></canvas>
+                        </div>
+                    </div>
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <h3>Health Score Distribution</h3>
+                        </div>
+                        <div class="chart-body">
+                            <canvas id="chart-health-dist"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recommendations -->
+                <div class="recommendations-panel">
+                    <h3>🧪 Nutrient Recommendations</h3>
+                    <div class="rec-grid" id="soil-recommendations">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- ═══ WATER QUALITY TAB ═══ -->
+            <div class="tab-content" id="tab-water">
+                <div class="page-header">
+                    <h2>Water Quality Management</h2>
+                    <p class="page-desc">Source-by-source quality grades and treatment recommendations</p>
+                </div>
+
+                <div class="water-sources">
+                    <div class="source-card" id="source-borewell">
+                        <div class="source-icon">🕳️</div>
+                        <div class="source-name">Borewell</div>
+                        <div class="source-grade grade-b">B</div>
+                        <div class="source-detail">pH 7.5 · TDS 600</div>
+                    </div>
+                    <div class="source-card" id="source-river">
+                        <div class="source-icon">🏞️</div>
+                        <div class="source-name">River</div>
+                        <div class="source-grade grade-b">B</div>
+                        <div class="source-detail">pH 7.0 · TDS 350</div>
+                    </div>
+                    <div class="source-card" id="source-canal">
+                        <div class="source-icon">🚿</div>
+                        <div class="source-name">Canal</div>
+                        <div class="source-grade grade-c">C</div>
+                        <div class="source-detail">pH 7.2 · TDS 450</div>
+                    </div>
+                    <div class="source-card" id="source-rainwater">
+                        <div class="source-icon">🌧️</div>
+                        <div class="source-name">Rainwater</div>
+                        <div class="source-grade grade-a">A</div>
+                        <div class="source-detail">pH 6.5 · TDS 50</div>
+                    </div>
+                </div>
+
+                <div class="charts-row">
+                    <div class="chart-card wide">
+                        <div class="chart-header">
+                            <h3>Quality Grade Distribution by Source</h3>
+                        </div>
+                        <div class="chart-body">
+                            <canvas id="chart-water-sources"></canvas>
+                        </div>
+                    </div>
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <h3>Overall Quality Grades</h3>
+                        </div>
+                        <div class="chart-body">
+                            <canvas id="chart-water-grades"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="treatment-guide">
+                    <h3>💊 Treatment Guide</h3>
+                    <div class="treatment-grid" id="treatment-grid">
+                        <div class="treatment-card grade-a-bg">
+                            <div class="treatment-grade">A</div>
+                            <div class="treatment-info">
+                                <strong>Excellent</strong>
+                                <p>No treatment needed. Safe for irrigation and livestock.</p>
+                            </div>
+                        </div>
+                        <div class="treatment-card grade-b-bg">
+                            <div class="treatment-grade">B</div>
+                            <div class="treatment-info">
+                                <strong>Good</strong>
+                                <p>Basic filtration recommended. Suitable for most crops.</p>
+                            </div>
+                        </div>
+                        <div class="treatment-card grade-c-bg">
+                            <div class="treatment-grade">C</div>
+                            <div class="treatment-info">
+                                <strong>Moderate</strong>
+                                <p>Sediment filtration + pH adjustment recommended.</p>
+                            </div>
+                        </div>
+                        <div class="treatment-card grade-d-bg">
+                            <div class="treatment-grade">D</div>
+                            <div class="treatment-info">
+                                <strong>Poor</strong>
+                                <p>Multi-stage treatment required. Limit to tolerant crops.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ═══ IRRIGATION TAB ═══ -->
+            <div class="tab-content" id="tab-irrigation">
+                <div class="page-header">
+                    <h2>Smart Irrigation Scheduling</h2>
+                    <p class="page-desc">Zone-by-zone water needs, scheduling, and savings analytics</p>
+                </div>
+
+                <div class="irrigation-summary">
+                    <div class="irr-stat">
+                        <div class="irr-stat-value" id="irr-savings">34%</div>
+                        <div class="irr-stat-label">Water Saved</div>
+                        <div class="irr-stat-sub">vs uniform irrigation</div>
+                    </div>
+                    <div class="irr-stat">
+                        <div class="irr-stat-value" id="irr-daily">8.2mm</div>
+                        <div class="irr-stat-label">Avg Daily Need</div>
+                        <div class="irr-stat-sub">across all zones</div>
+                    </div>
+                    <div class="irr-stat">
+                        <div class="irr-stat-value" id="irr-drought-zones">2</div>
+                        <div class="irr-stat-label">High Priority</div>
+                        <div class="irr-stat-sub">zones needing attention</div>
+                    </div>
+                </div>
+
+                <div class="zone-schedule" id="zone-schedule">
+                    <h3>📅 Zone Irrigation Schedule</h3>
+                    <div class="schedule-grid">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+
+                <div class="charts-row">
+                    <div class="chart-card wide">
+                        <div class="chart-header">
+                            <h3>Weekly Irrigation Demand Forecast</h3>
+                        </div>
+                        <div class="chart-body">
+                            <canvas id="chart-irrigation-weekly"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ═══ CROP ADVISOR TAB ═══ -->
+            <div class="tab-content" id="tab-crops">
+                <div class="page-header">
+                    <h2>Crop Intelligence Advisor</h2>
+                    <p class="page-desc">ML-powered crop recommendations and yield forecasts for each zone</p>
+                </div>
+
+                <div class="crop-recommendations" id="crop-recommendations">
+                    <!-- Populated by JS -->
+                </div>
+
+                <div class="charts-row">
+                    <div class="chart-card wide">
+                        <div class="chart-header">
+                            <h3>Zone Yield Efficiency (%)</h3>
+                        </div>
+                        <div class="chart-body">
+                            <canvas id="chart-yield-efficiency"></canvas>
+                        </div>
+                    </div>
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <h3>Top Recommended Crops</h3>
+                        </div>
+                        <div class="chart-body">
+                            <canvas id="chart-crop-dist"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ═══ ALERTS TAB ═══ -->
+            <div class="tab-content" id="tab-alerts">
+                <div class="page-header">
+                    <h2>Alerts & Notifications</h2>
+                    <p class="page-desc">Anomalies, warnings, and recommended actions</p>
+                </div>
+
+                <div class="alert-filters">
+                    <button class="filter-btn active" data-filter="all">All</button>
+                    <button class="filter-btn" data-filter="critical">Critical</button>
+                    <button class="filter-btn" data-filter="warning">Warning</button>
+                    <button class="filter-btn" data-filter="info">Info</button>
+                </div>
+
+                <div class="alerts-full" id="alerts-full">
+                    <!-- Populated by JS -->
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="js/data-loader.js"></script>
+    <script src="js/charts.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>

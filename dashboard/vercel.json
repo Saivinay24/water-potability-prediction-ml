@@ -1,0 +1,9 @@
+{
+    "version": 2,
+    "name": "agrisense-ai",
+    "buildCommand": "",
+    "outputDirectory": ".",
+    "rewrites": [
+        { "source": "/(.*)", "destination": "/index.html" }
+    ]
+}
